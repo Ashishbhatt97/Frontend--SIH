@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Signup = () => {
   return (
-    <div className="sign-up-container overflow-hidden p-8">
+    <div className="sign-up-container">
       <div className="h-screen">
         <Image
           className="object-cover w-full h-full"
@@ -16,7 +16,7 @@ const Signup = () => {
           alt="upload"
         />
       </div>
-      <div className="right-side">
+      <div className="right-side mt-16">
         <h2 className="heading">Sign in to College Connect</h2>
         <Button className=" w-2/5 bg-[#70ee70]" variant={"default"}>
           {/* <Image className="google" src={google}  alt="Google" /> */}
