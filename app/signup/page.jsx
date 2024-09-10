@@ -1,10 +1,51 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import myImage from "../../components/Assets/campus.jpg";
 import "./Signup.css";
 import Link from "next/link";
+import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Basic Form Validation
+    if (!email || !password) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/user/register",
+        {
+          name,
+          email,
+          password,
+        }
+      );
+      if (response.data) {
+        router.push("/login");
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      setError("Signup failed, please try again.");
+    }
+  };
+
   return (
     <div className="sign-up-container">
       <div className="h-screen">
@@ -25,14 +66,15 @@ const Signup = () => {
         <p className="w-2/5 flex mt-2 items-center justify-center">
           <span className="font-medium">Or</span>
         </p>
-        <form className="mt-2">
+        <form className="mt-2" onSubmit={handleSignup}>
           <div className="form-group">
             <input
               className="input_area"
               type="text"
               id="username"
-              name="username"
               placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
@@ -41,8 +83,8 @@ const Signup = () => {
               className="input_area"
               type="text"
               id="username"
-              name="username"
               placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -51,11 +93,13 @@ const Signup = () => {
               className="input_area"
               type="password"
               id="password"
-              name="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <Button type="submit" className="w-full">
             Sign Up
           </Button>
